@@ -1,18 +1,45 @@
-<app-menu></app-menu>
 <div class="container" *ngIf="!isLogged">
-  <div class="row m-3">
-    <div class="col-md-6 mx-auto">
-      <div class="card">
-        <div class="card-header text-center">
-          Sign In With Social
+  <h1>
+    <strong>Sign In Manually</strong>
+  </h1>
+  <div mat-dialog-content="mat-dialog-content">
+    <div>
+      <mat-card>
+        <div class="space-y-1">
+          <div class="w-full">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter your email</mat-label>
+              <input matInput="matInput" placeholder="Email" [formControl]="email" required="required">
+              <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="w-full">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter your password</mat-label>
+              <input matInput="matInput" [type]="hide ? 'password' : 'text'">
+              <button mat-icon-button="mat-icon-button" matSuffix="matSuffix" (click)="hide = !hide"
+                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
         </div>
-        <div class="card-body">
+
+        <div>
           <button class="btn btn-outline-danger btn-lg btn-block" (click)="signInWithGoogle()">
-            <i class="fab fa-google"></i> Login with Google</button>
+            <i class="fab fa-google"></i>
+            Google
+          </button>
           <button class="btn btn-outline-primary btn-lg btn-block" (click)="signInWithFB()">
-            <i class="fab fa-facebook"></i> Login with Facebook</button>
+            <i class="fab fa-facebook"></i>
+            Facebook
+          </button>
         </div>
-      </div>
+      </mat-card>
     </div>
+  </div>
+  <div mat-dialog-actions="mat-dialog-actions ">
+    <button class="py-2 px-4  bg-blue-500 hover:bg-nav-hover-blue rounded-md text-white"
+      (click)="onNoClick()">Close</button>
   </div>
 </div>

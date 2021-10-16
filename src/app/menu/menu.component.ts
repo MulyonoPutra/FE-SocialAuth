@@ -20,6 +20,8 @@ import {
   share,
   throttleTime,
 } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../login/login.component';
 
 enum VisibilityState {
   Visible = 'visible',
@@ -58,7 +60,8 @@ export class MenuComponent implements OnInit, AfterViewInit {
   constructor(
     private authService: SocialAuthService,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -102,4 +105,16 @@ export class MenuComponent implements OnInit, AfterViewInit {
       this.router.navigate(['/login']);
     });
   }
+
+  openDialog() {
+    let dialogRef = this.dialog.open(LoginComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+      dialogRef.close();
+      this.dialog.closeAll()
+    });
+  }
+
+  
 }

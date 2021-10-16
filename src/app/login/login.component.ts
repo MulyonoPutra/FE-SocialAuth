@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {
   FacebookLoginProvider,
@@ -21,13 +23,17 @@ export class LoginComponent implements OnInit {
   socialUser: SocialUser | undefined;
   userLogged: SocialUser | undefined;
   isLogged: boolean | undefined;
+  hide = true;
+  email = new FormControl('', [Validators.required, Validators.email]);
 
   constructor(
     private authService: SocialAuthService,
     private router: Router,
     private oauthService: OauthService,
     private tokenService: TokenService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<LoginComponent>
   ) {}
 
   ngOnInit(): void {
@@ -47,10 +53,10 @@ export class LoginComponent implements OnInit {
         this.oauthService.google(tokenGoogle).subscribe(
           (res) => {
             console.log(res.value);
-            //sessionStorage.setItem(this.TOKEN_KEY, res.value);
             this.tokenService.setToken(res.value);
-            this.isLogged = true; 
-            this.router.navigate(['/']);
+            this.isLogged = true;
+            this.dialog.closeAll();
+            this.router.navigate(['/home']);
           },
           (err) => {
             console.log(err);
@@ -90,6 +96,18 @@ export class LoginComponent implements OnInit {
     this.authService.signOut().then((data) => {
       this.tokenService.logOut();
       this.isLogged = false;
+      this.router.navigate(['/home']);
     });
+  }
+
+  getErrorMessage() {
+    if (this.email.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return this.email.hasError('email') ? 'Not a valid email' : '';
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
